@@ -24,6 +24,17 @@ for parent in parent_sections:
     winner_work = winner_work_div.text.strip()
     print(winner_work)
 
+    winner_div = child_section.find('div', class_='awards-category-link')
+    if winner_div is None:
+        winner_div = child_section.find('div', class_='w-full text-left text-14 font-polaris md-xl:leading-normal')
+    if winner_div is None:
+        continue
+    
+    winner = winner_div.text.strip()
+
+
+    print(winner)
+
 
 
 # section_ids = [section['id'] for section in parent_sections if section.get('id') is not None]
