@@ -2,6 +2,8 @@ import re
 
 from bs4 import BeautifulSoup
 
+from pprint import pprint
+
 
 with open("1st_annual.html") as file:
     contents = file.read()
@@ -33,28 +35,32 @@ for parent in parent_sections:
     elif winner_div is None:
         winner = "Null"
 
+    # Extract the nominees
+    # nominee_arr = child_section.find_all('div', class_='awards-nominees-link')
+    nominee_arr = child_section.find_all('div', class_='accordion_section')
+    for nominee in nominee_arr:
+        nominee_work = re.sub(' +', ' ', nominee.find('span').text.strip().replace('\n', ''))
+        nominee_artist = re.sub(' +', ' ', nominee.find('div', class_='awards-nominees-link').text.strip().replace('\n', ''))
+        print({nominee_work : nominee_artist})
 
-        
-    # winner_div = child_section.find('div', class_='awards-category-link')
-    # if winner_div is None:
-    #     winner_div = child_section.find('div', class_='w-full text-left text-14 font-polaris md-xl:leading-normal')
-    # if winner_div is None:
-    #     continue
+
     
+    # nominee_names = [name.text.strip() for name in nominee_arr]
+    # unformatted_nominee_works = [work.find('span').text.strip().replace('\n', '') for work in nominee_work_arr]
+    # nominee_works = [re.sub(' +', ' ', work) for work in unformatted_nominee_works]
+    
+    # nominees = dict(zip(nominee_names, nominee_works))
 
-    # unformatted_winner_text = winner_div.text.strip().replace('\n', '')
-    # winner = re.sub(' +', ' ', unformatted_winner_text)
+    # api_format = {
+    # 'category': category,
+    # 'nominees': nominees,
+    # 'winner': {winner: winner_work}
+    # }
 
-    api_format = {
-    'category': category,
-    # 'nominees': dict(zip(nominee_names, nominee_works)),
-    'winner': {winner: winner_work}
-    }
-
-    print(api_format)
+    # pprint(api_format)
 
 
-    # print(winner)
+
 
 
 
@@ -63,8 +69,8 @@ for parent in parent_sections:
 # section_ids = [section['id'] for section in parent_sections if section.get('id') is not None]
 # print(section_ids)
 
-unique_categories = []
-winners = {}
+# unique_categories = []
+# winners = {}
 
 
 #LOOP THROUGH EACH SECTION
