@@ -15,10 +15,16 @@ for parent in parent_sections:
 
     child_section = parent.find('section')
 
-    category = child_section.find('div', class_='w-full text-left md-xl:text-right mb-1 md-xl:mb-20px text-14 md-xl:text-22 font-polaris uppercase')
-    unformatted_category_text = category.text.strip().replace('\n', '')
-    category_text = re.sub(' +', ' ', unformatted_category_text)
-    print(category_text)
+    category_div = child_section.find('div', class_='w-full text-left md-xl:text-right mb-1 md-xl:mb-20px text-14 md-xl:text-22 font-polaris uppercase')
+    unformatted_category_text = category_div.text.strip().replace('\n', '')
+    category = re.sub(' +', ' ', unformatted_category_text)
+    # print(category)
+
+    winner_work_div = child_section.find('div', class_='w-full text-center md-xl:text-left text-17 md-xl:text-22 mr-10px md-xl:mr-30px font-polaris font-bold md-xl:leading-8 tracking-wider')
+    winner_work = winner_work_div.text.strip()
+    print(winner_work)
+
+
 
 # section_ids = [section['id'] for section in parent_sections if section.get('id') is not None]
 # print(section_ids)
