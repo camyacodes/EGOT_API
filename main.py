@@ -22,18 +22,41 @@ for parent in parent_sections:
 
     winner_work_div = child_section.find('div', class_='w-full text-center md-xl:text-left text-17 md-xl:text-22 mr-10px md-xl:mr-30px font-polaris font-bold md-xl:leading-8 tracking-wider')
     winner_work = winner_work_div.text.strip()
-    print(winner_work)
+    # print(winner_work)
 
-    winner_div = child_section.find('div', class_='awards-category-link')
-    if winner_div is None:
-        winner_div = child_section.find('div', class_='w-full text-left text-14 font-polaris md-xl:leading-normal')
-    if winner_div is None:
-        continue
+    if (winner_div := child_section.find('div', class_='awards-category-link')) is not None:
+        unformatted_winner_text = winner_div.text.strip().replace('\n', '')
+        winner = re.sub(' +', ' ', unformatted_winner_text)
+    elif (winner_div := child_section.find('div', class_='w-full text-left text-14 font-polaris md-xl:leading-normal')) is not None:
+        unformatted_winner_text = winner_div.text.strip().replace('\n', '')
+        winner = re.sub(' +', ' ', unformatted_winner_text)
+    elif winner_div is None:
+        winner = "Null"
+
+
+        
+    # winner_div = child_section.find('div', class_='awards-category-link')
+    # if winner_div is None:
+    #     winner_div = child_section.find('div', class_='w-full text-left text-14 font-polaris md-xl:leading-normal')
+    # if winner_div is None:
+    #     continue
     
-    winner = winner_div.text.strip()
+
+    # unformatted_winner_text = winner_div.text.strip().replace('\n', '')
+    # winner = re.sub(' +', ' ', unformatted_winner_text)
+
+    api_format = {
+    'category': category,
+    # 'nominees': dict(zip(nominee_names, nominee_works)),
+    'winner': {winner: winner_work}
+    }
+
+    print(api_format)
 
 
-    print(winner)
+    # print(winner)
+
+
 
 
 
