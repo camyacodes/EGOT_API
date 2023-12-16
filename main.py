@@ -52,6 +52,10 @@ for parent in parent_sections:
             nominee_artist = re.sub(' +', ' ', unformatted_nominee_artist)
         elif unformatted_nominee_artist is None: 
             nominee_artist = "Null"
+
+
+
+
             
 
         
