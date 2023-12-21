@@ -35,24 +35,51 @@ for parent in parent_sections:
     elif winner_div is None:
         winner = "Null"
 
+
+
     
     # Extract the nominees
     # nominee_arr = child_section.find_all('div', class_='awards-nominees-link')
     nominee_sections = child_section.find_all('div', class_='accordion__section')
+    nominees = []
     
     for section in nominee_sections:
         unformatted_nominee_work = section.find('span').text.strip().replace('\n', '')
         nominee_work = re.sub(' +', ' ', unformatted_nominee_work)
 
-        unformatted_nominee_artist = section.find('div', class_='awards-nominees-link').text.strip().replace('\n', '')
-        if unformatted_nominee_artist:
-            nominee_artist = re.sub(' +', ' ', unformatted_nominee_artist)
-        elif (unformatted_nominee_artist := section.find('div', class_='accordion__content').text.strip().replace('\n', '')):
-            unformatted_nominee_artist = section.find('div', class_='accordion__content').text.strip().replace('\n', '')
-            nominee_artist = re.sub(' +', ' ', unformatted_nominee_artist)
-        elif unformatted_nominee_artist is None: 
-            nominee_artist = "Null"
+        # unformatted_nominee_artist = section.find('div', class_='awards-nominees-link').text.strip().replace('\n', '')
+        # if unformatted_nominee_artist:
+        #     nominee_artist = re.sub(' +', ' ', unformatted_nominee_artist)
+        # elif (unformatted_nominee_artist := section.find('div', class_='accordion__content').text.strip().replace('\n', '')):
+        #     unformatted_nominee_artist = section.find('div', class_='accordion__content').text.strip().replace('\n', '')
+        #     nominee_artist = re.sub(' +', ' ', unformatted_nominee_artist)
+        # elif unformatted_nominee_artist is None: 
+        #     nominee_artist = "Null"
 
+        # nominee_data = {'artist': nominee_artist, 'work': nominee_work}
+        # nominees.append(nominee_data)
+        nominee_artist_element = section.find('div', class_='awards-nominees-link')
+        # print(nominee_artist_element)
+        if nominee_artist_element and not nominee_artist_element.text:
+            # If artist information is not in 'awards-nominees-link', check 'accordion__content'
+            accordion_content_element = section.find('div', class_='accordion__content')
+            # print(accordion_content_element)
+            unformatted_nominee_artist = accordion_content_element.text.strip().replace('\n', '') if accordion_content_element else None
+        elif nominee_artist_element:
+            unformatted_nominee_artist = nominee_artist_element.text.strip().replace('\n', '')
+
+        nominee_artist = re.sub(' +', ' ', unformatted_nominee_artist) if unformatted_nominee_artist else "Null"
+
+        nominee_data = {'artist': nominee_artist, 'work': nominee_work}
+        nominees.append(nominee_data)
+
+    api_format = {
+    'category': category,
+    'nominees': nominees,
+    'winner': {'artist': winner, 'work': winner_work}
+    }
+
+    pprint(api_format)
 
 
 
