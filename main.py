@@ -15,11 +15,11 @@ soup = BeautifulSoup(links_content, 'html.parser')
 
 # Extract links
 base_url = "https://www.grammy.com"  # Replace with your actual base URL
-links = [base_url + link['href'] for link in soup.find_all('a', href=True)]
+url_lists = [base_url + link['href'] for link in soup.find_all('a', href=True)]
 
 # Print the extracted links
-for link in links:
-    print(link)
+# for link in links:
+#     print(link)
 
 
 
@@ -39,7 +39,10 @@ for url in url_list:
 # sections = soup.find_all('section')
 parent_sections = soup.find_all('section', class_='h-full w-full flex flex-col items-center mt-6 md-xl:mt-8')
 
+year = 0
+
 for parent in parent_sections:
+    year += 1
 
     child_section = parent.find('section')
 
@@ -100,6 +103,7 @@ for parent in parent_sections:
         nominees.append(nominee_data)
 
     api_format = {
+    'Year': year, 
     'category': category,
     'nominees': nominees,
     'winner': {'artist': winner, 'work': winner_work}
