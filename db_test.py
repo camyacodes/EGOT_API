@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine  # Add this import
 
 app = Flask(__name__)
 
@@ -11,26 +12,35 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:C$ocks2016!@localhost/gram
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# Create the engine separately
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+
+# Drop the existing database and create a new one
+with app.app_context():
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
+
 class Year(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     year = db.Column(db.Integer)
     categories = db.relationship('Category', backref='year', lazy=True)
 
 class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     year_id = db.Column(db.Integer, db.ForeignKey('year.id'), nullable=False)
     name = db.Column(db.String(255))
     winners = db.relationship('Winner', backref='category', lazy=True)
     nominees = db.relationship('Nominee', backref='category', lazy=True)
 
 class Winner(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     artist = db.Column(db.String(255))
     work = db.Column(db.String(255))
 
 class Nominee(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     artist = db.Column(db.String(255))
     work = db.Column(db.String(255))
